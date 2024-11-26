@@ -82,7 +82,7 @@ jobs:
           scale: 1.5
 
       - name: Upload lint badge as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: lint_badge
           path: .github/badges/lint_badge.svg
@@ -110,7 +110,7 @@ jobs:
           scale: 1.5
 
       - name: Upload pytest badge as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: pytest_badge
           path: .github/badges/pytest_badge.svg

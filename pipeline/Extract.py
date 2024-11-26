@@ -1,8 +1,8 @@
 """Connects to the API and extracts relevant information"""
 
 import csv
-import requests
 import logging
+import requests
 
 logging.basicConfig(
     level=logging.INFO,
@@ -65,20 +65,20 @@ def fetch_and_collect_data() -> None:
 
         if response.status_code == 200:
             api_information = response.json()
-            Botanist = extract_botanist_information(
+            botanist = extract_botanist_information(
                 api_information['botanist'])
-            Location = extract_location_information(
+            location = extract_location_information(
                 api_information['origin_location'])
-            Plant = extract_plant_information(api_information)
-            Plant_metric = extract_metric_information(api_information)
+            plant = extract_plant_information(api_information)
+            plant_metric = extract_metric_information(api_information)
 
             combined_data = {
-                **Botanist,
-                **Location,
-                "plant_name": Plant["name"],
-                "plant_scientific_name": Plant["scientific_name"],
-                "plant_image_url": Plant["original_url"],
-                **Plant_metric
+                **botanist,
+                **location,
+                "plant_name": plant["name"],
+                "plant_scientific_name": plant["scientific_name"],
+                "plant_image_url": plant["original_url"],
+                **plant_metric
             }
 
             collected_data.append(combined_data)
@@ -96,10 +96,10 @@ def write_to_csv(data: list[dict], csv_file: str) -> None:
         writer = csv.DictWriter(file, fieldnames=data[0].keys())
         writer.writeheader()
         writer.writerows(data)
-    logging.info(f"Data written to CSV file: {csv_file}")
+    logging.info(f"Data written to CSV file: {CSV_FILE}")
 
 
 if __name__ == "__main__":
-    csv_file = "plant_information.csv"
-    collected_data = fetch_and_collect_data()
-    write_to_csv(collected_data, csv_file)
+    CSV_FILE = "plant_information.csv"
+    COLLECTED_DATA = fetch_and_collect_data()
+    write_to_csv(COLLECTED_DATA, CSV_FILE)

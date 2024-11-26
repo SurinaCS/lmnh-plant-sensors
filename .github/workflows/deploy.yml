@@ -86,6 +86,7 @@ jobs:
         with:
           name: lint_badge
           path: .github/badges/lint_badge.svg
+          if-no-files-found: ignore
 
   pytest_badge:
     needs: test
@@ -114,6 +115,7 @@ jobs:
         with:
           name: pytest_badge
           path: .github/badges/pytest_badge.svg
+          if-no-files-found: ignore
 
 
   # badge: 

@@ -1,4 +1,3 @@
-# Challenge 7: Test, Lint
 name: Complete Build - Test, Lint
 
 on:
@@ -27,7 +26,8 @@ jobs:
       - name: Install Requirements
         run: |
           python -m pip install --upgrade pip
-          pip install pytest pylint
+          pip install pytest
+          pip install pylint
           for FILE in $(find . -name 'requirements.txt'); do
             pip install -r $FILE
           done
@@ -59,45 +59,102 @@ jobs:
           pylint --fail-under=8 $(git ls-files '*.py')
     
 
-  badge: 
-    needs: [lint]
+  lint_badge:
+    needs: lint
     runs-on: ubuntu-latest
-
-    steps: 
-      - name: Checkout Repository 
+    steps:
+      - name: Checkout Repository
         uses: actions/checkout@v4
-      
-      # Create the directory where badges will be saved, if needed
-      - name: Create destination directory for badge
+
+      - name: Create destination directory for lint badge
         env:
-          BADGE_PATH: .github/badges/lint_test.svg
+          BADGE_PATH: .github/badges/lint_badge.svg
         run: mkdir -p "${BADGE_PATH%/*}"
 
-      # Display build completed 
-      - name: Generate the badge SVG image
+      - name: Generate the lint badge SVG image
         uses: emibcn/badge-action@v1
-        id: lint_test_badge
+        id: lint_badge
         with:
-          label: 'Complete Build: '
+          label: 'Lint:'
           status: 'Completed'
-          color: 'blue'
-          path: .github/badges/lint_test.svg
+          color: 'green'
+          path: .github/badges/lint_badge.svg
           scale: 1.5
-    
-      - name: Upload badge as artifact
+
+      - name: Upload lint badge as artifact
         uses: actions/upload-artifact@v2
         with:
-          name: badge
-          path: .github/badges/lint_test.svg
-          if-no-files-found: ignore
+          name: lint_badge
+          path: .github/badges/lint_badge.svg
+
+  pytest_badge:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Create destination directory for pytest badge
+        env:
+          BADGE_PATH: .github/badges/pytest_badge.svg
+        run: mkdir -p "${BADGE_PATH%/*}"
+
+      - name: Generate the pytest badge SVG image
+        uses: emibcn/badge-action@v1
+        id: pytest_badge
+        with:
+          label: 'Pytest:'
+          status: 'Completed'
+          color: 'blue'
+          path: .github/badges/pytest_badge.svg
+          scale: 1.5
+
+      - name: Upload pytest badge as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: pytest_badge
+          path: .github/badges/pytest_badge.svg
+
+
+  # badge: 
+  #   needs: [lint]
+  #   runs-on: ubuntu-latest
+
+  #   steps: 
+  #     - name: Checkout Repository 
+  #       uses: actions/checkout@v4
+      
+  #     # Create the directory where badges will be saved, if needed
+  #     - name: Create destination directory for badge
+  #       env:
+  #         BADGE_PATH: .github/badges/lint_test.svg
+  #       run: mkdir -p "${BADGE_PATH%/*}"
+
+  #     # Display build completed 
+  #     - name: Generate the badge SVG image
+  #       uses: emibcn/badge-action@v1
+  #       id: lint_test_badge
+  #       with:
+  #         label: 'Complete Build: '
+  #         status: 'Completed'
+  #         color: 'blue'
+  #         path: .github/badges/lint_test.svg
+  #         scale: 1.5
+    
+  #     - name: Upload badge as artifact
+  #       uses: actions/upload-artifact@v2
+  #       with:
+  #         name: badge
+  #         path: .github/badges/lint_test.svg
+  #         if-no-files-found: ignore
      
-      - name: Committing logs and badge to the repository
-        if: github.repository != 'sigma-labs-xyz/coursework-template'
-        run: |
-          git config --global user.name "FarihaChoudhury"
-          git config --global user.email "farihac2002@gmail.com"
-          git pull
-          git add .github/badges/lint_test.svg
-          git checkout main
-          git diff-index --quiet HEAD || git commit -am "Update Complete build"
-          git push
+  #     - name: Committing logs and badge to the repository
+  #       if: github.repository != 'sigma-labs-xyz/coursework-template'
+  #       run: |
+  #         git config --global user.name "FarihaChoudhury"
+  #         git config --global user.email "farihac2002@gmail.com"
+  #         git pull
+  #         git add .github/badges/lint_test.svg
+  #         git checkout main
+  #         git diff-index --quiet HEAD || git commit -am "Update Complete build"
+  #         git push

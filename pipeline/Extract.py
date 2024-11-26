@@ -84,8 +84,8 @@ def fetch_and_collect_data() -> None:
             collected_data.append(combined_data)
             logging.info(f"Processed plant ID: {number}")
         else:
-            logging.error(f"Failed with status code: {
-                          response.status_code}, plant ID: {number}")
+            logging.error(f"""Failed with status code: {
+                          response.status_code}, plant ID: {number}""")
     return collected_data
 
 

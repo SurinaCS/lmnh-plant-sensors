@@ -1,4 +1,7 @@
 # Liverpool Natural History Museum: Plant Health Monitoring System
+![Lint Badge](.github/badges/lint_badge.svg)
+![Pytest Badge](.github/badges/pytest_badge.svg)
+
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>

@@ -92,3 +92,4 @@ venv/
 .venv
 .env
 terraform.tfvars
+*.csv

@@ -87,7 +87,9 @@ __pycache__
 venv/
 .pytest_cache
 
-.terraform
+.terraform*
+*.tfvars
+*.tfstate*
 
 .venv
 .env

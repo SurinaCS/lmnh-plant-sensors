@@ -3,8 +3,11 @@
 # pylint: disable=broad-exception-caught
 # pylint: disable=line-too-long
 
+import asyncio
+import pandas as pd
+
 from dotenv import load_dotenv
-from extract import main as extract
+from extract import fetch_and_collect_data
 from transform import main as transform
 from load import main as load
 
@@ -12,7 +15,15 @@ from load import main as load
 def lambda_handler(event, context):
     """Runs the ETL pipeline when the lambda is invoked"""
     try:
-        main()
+
+        load_dotenv()
+
+        extracted_plants_metrics = pd.DataFrame(
+            asyncio.run(fetch_and_collect_data()))
+
+        cleaned_plant_metrics = transform(extracted_plants_metrics)
+
+        load(cleaned_plant_metrics)
         return {
             "statuscode": 200,
             "body": "ETL pipeline executed successfully!"
@@ -22,24 +33,3 @@ def lambda_handler(event, context):
             "statusCode": 500,
             "body": f"An unexpected error occurred: {e}"
         }
-
-
-def main() -> None:
-    """
-    Executes the ETL (Extract, Transform, Load) pipeline for plant metrics.
-
-    1. Extract: Fetching and collecting plant data asynchronously from an external API.
-    2. Transform: Cleaning, verifying, and transforming the data
-    3. Load: Storing the transformed data into a database
-    """
-    load_dotenv()
-
-    extracted_plants_metrics = extract()
-
-    cleaned_plant_metrics = transform(extracted_plants_metrics)
-
-    load(cleaned_plant_metrics)
-
-
-if __name__ == "__main__":
-    main()
